@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Name — Portfolio</title>
+
+  <!-- Google Fonts: Space Grotesk for headings, Inter for body text -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- =====================================================================
+       STYLES — all CSS lives here, between <style> tags
+       ===================================================================== -->
+  <style>
+
+    /* ----- 1. DESIGN TOKENS (change these to restyle everything) --------- */
+    :root {
+      --bg:         #0d0f0e;   /* near-black background */
+      --surface:    #161a18;   /* slightly lighter card/section background */
+      --border:     #1f2622;   /* subtle border color */
+      --green:      #3ddc84;   /* signature accent — Android green, vivid */
+      --green-dim:  #1e6e41;   /* muted version for backgrounds */
+      --text:       #e8ede9;   /* main text, slightly warm white */
+      --muted:      #6b7c70;   /* secondary / label text */
+      --font-head:  'Space Grotesk', sans-serif;
+      --font-body:  'Inter', sans-serif;
+      --radius:     10px;
+      --transition: 0.25s ease;
+    }
+
+    /* ----- 2. RESET & BASE ------------------------------------------------ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }   /* smooth scrolling for nav links */
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    a { color: var(--green); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    img { max-width: 100%; display: block; }
+
+    /* ----- 3. LAYOUT HELPER ---------------------------------------------- */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    section { padding: 5rem 0; }
+
+    /* Horizontal rule used as section divider */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+
+    /* ----- 4. NAVIGATION ------------------------------------------------- */
+    nav {
+      position: sticky;    /* sticks to top as you scroll */
+      top: 0;
+      z-index: 100;
+      background: rgba(13, 15, 14, 0.85);
+      backdrop-filter: blur(10px);   /* frosted-glass effect */
+      border-bottom: 1px solid var(--border);
+    }
+
+    nav .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+
+    .nav-logo {
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.5px;
+    }
+
+    /* The green dot makes the logo feel alive */
+    .nav-logo span { color: var(--green); }
+
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+
+    .nav-links a {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color var(--transition);
+    }
+
+    .nav-links a:hover { color: var(--green); text-decoration: none; }
+
+    /* ----- 5. HERO SECTION ----------------------------------------------- */
+    #hero {
+      padding: 7rem 0 5rem;
+      position: relative;
+      overflow: hidden;     /* keeps the glow from spilling out */
+    }
+
+    /* Ambient glow behind the hero — purely decorative */
+    #hero::before {
+      content: '';
+      position: absolute;
+      top: -80px;
+      left: -80px;
+      width: 420px;
+      height: 420px;
+      background: radial-gradient(circle, rgba(61,220,132,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-name {
+      font-family: var(--font-head);
+      font-size: clamp(2.6rem, 6vw, 4.2rem);  /* scales with screen width */
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+    }
+
+    /* Underline only the accent word with a green squiggle */
+    .hero-name .accent {
+      color: var(--green);
+      border-bottom: 3px solid var(--green-dim);
+    }
+
+    .hero-bio {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 540px;
+      margin-bottom: 2.5rem;
+    }
+
+    /* Button group — CTA + secondary link */
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
+
+    .btn {
+      display: inline-block;
+      padding: 0.7rem 1.6rem;
+      border-radius: var(--radius);
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all var(--transition);
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: #0d0f0e;   /* dark text on bright button */
+    }
+    .btn-primary:hover {
+      background: #5aeaa0;
+      text-decoration: none;
+      transform: translateY(-2px);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover {
+      border-color: var(--green);
+      color: var(--green);
+      text-decoration: none;
+      transform: translateY(-2px);
+    }
+
+    /* ----- 6. ABOUT ME SECTION ------------------------------------------- */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .about-img-wrap { position: relative; }
+
+    .about-img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: var(--radius);
+      filter: grayscale(15%);
+    }
+
+    .about-img-wrap::after {
+      content: '';
+      position: absolute;
+      inset: -10px -10px 10px 10px;
+      border: 2px solid var(--green-dim);
+      border-radius: var(--radius);
+      z-index: -1;
+    }
+
+    .about-text { color: var(--muted); margin-bottom: 0.9rem; }
+
+    .quick-facts {
+      list-style: none;
+      margin-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .quick-facts li {
+      font-size: 0.9rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .qf-icon { font-size: 1rem; }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+      font-family: var(--font-head);
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+      line-height: 1.2;
+    }
+
+    /* ----- 7. BACKGROUND SECTION ----------------------------------------- */
+    .bg-quote {
+      margin-top: 2.5rem;
+      padding: 1.25rem 1.5rem;
+      border-left: 3px solid var(--green);
+      background: var(--bg);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      color: var(--muted);
+      font-style: italic;
+      font-size: 0.95rem;
+    }
+
+    .bg-quote cite {
+      display: block;
+      margin-top: 0.5rem;
+      font-style: normal;
+      font-size: 0.8rem;
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    /* ----- 8. HOBBIES SECTION -------------------------------------------- */
+    .hobby-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+
+    .hobby-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem 1.25rem;
+      transition: border-color var(--transition), transform var(--transition);
+    }
+
+    .hobby-card:hover {
+      border-color: var(--green);
+      transform: translateY(-4px);
+    }
+
+    .hobby-emoji { font-size: 2rem; margin-bottom: 0.75rem; }
+
+    .hobby-name {
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .hobby-desc { font-size: 0.87rem; color: var(--muted); }
+
+    /* ----- 9. SKILLS SECTION --------------------------------------------- */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .skill-category {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+    }
+
+    .skill-cat-title {
+      font-family: var(--font-head);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+    }
+
+    .skill-bars { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
+
+    .skill-bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+    }
+
+    .bar-track {
+      height: 6px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    /* Bars start at width:0 and animate to their real width via JS */
+    .bar-fill {
+      height: 100%;
+      background: var(--green);
+      border-radius: 999px;
+      width: 0;
+      transition: width 1s ease;
+    }
+
+    .learning-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .learning-item {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .learning-dot {
+      width: 8px;
+      height: 8px;
+      min-width: 8px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    /* ----- 10. CONTACT SECTION -------------------------------------------- */
+    #contact {
+      text-align: center;
+    }
+
+    #contact .section-title { margin-bottom: 0.75rem; }
+
+    .contact-sub {
+      color: var(--muted);
+      max-width: 440px;
+      margin: 0 auto 2rem;
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .social-link {
+      padding: 0.5rem 1.2rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      color: var(--muted);
+      transition: all var(--transition);
+    }
+
+    .social-link:hover {
+      border-color: var(--green);
+      color: var(--green);
+      text-decoration: none;
+    }
+
+    /* ----- 9. FOOTER ----------------------------------------------------- */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    /* ----- 11. RESPONSIVE — mobile adjustments --------------------------- */
+    @media (max-width: 680px) {
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      #hero { padding: 4rem 0 3rem; }
+      .nav-links { display: none; }
+      .hobby-grid { grid-template-columns: 1fr 1fr; }
+      .skills-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ----- 12. SCROLL-REVEAL ANIMATION ----------------------------------- */
+    /* Elements start invisible; JS adds .visible to fade them in */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- =====================================================================
+       NAVIGATION
+       ===================================================================== -->
+  <nav>
+    <div class="container">
+      <span class="nav-logo">Kshitiz<span>.</span>Sharma</span>
+      <ul class="nav-links">
+        <li><a href="#about-me">About Me</a></li>
+        <li><a href="#background">Background</a></li>
+        <li><a href="#hobbies">Hobbies</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+
+  <!-- =====================================================================
+       HERO — the first thing visitors see
+       ===================================================================== -->
+  <section id="hero">
+    <div class="container">
+      <span class="hero-eyebrow">👋 Welcome to my portfolio</span>
+
+      <!-- Replace "Your Name" and "Developer" with your real info -->
+      <h1 class="hero-name">Hi, I'm <span class="accent">Kshitiz Sharma</span>,<br>a Creative & Content Designer.</h1>
+
+      <p class="hero-bio">
+        Student at XIM University, Bhubaneswar. Passionate about design,
+        music production, and telling stories through content.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#about-me" class="btn btn-primary">About me</a>
+        <a href="#contact" class="btn btn-ghost">Get in touch</a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+
+  <!-- =====================================================================
+       SECTION 1: ABOUT ME — who you are
+       Rubric: "a short introduction about who you are"
+       ===================================================================== -->
+  <section id="about-me">
+    <div class="container">
+
+      <!-- Photo + intro side by side -->
+      <div class="about-grid">
+
+        <!-- Your photo — replace src with your real image, e.g. src="me.jpg" -->
+        <div class="about-img-wrap reveal">
+          <img
+            class="about-img"
+            src="PHOTO.jpeg"
+            alt="A photo of Kshitiz Sharma"
+          />
+        </div>
+
+        <!-- Written introduction -->
+        <div class="reveal">
+          <p class="section-label">About Me</p>
+          <h2 class="section-title">Hi, I'm <span style="color:var(--green)">Kshitiz Sharma</span>.</h2>
+
+          <p class="about-text">
+            Hello there! I'm Kshitiz — a student at XIM University, Bhubaneswar,
+            with a love for creativity in all its forms. Whether it's designing
+            content for social media, producing music, or exploring new interests,
+            I'm always looking for ways to express myself and grow.
+          </p>
+          <p class="about-text">
+            This portfolio is a snapshot of who I am — my background, the things I
+            enjoy, and the skills I'm building. I hope it gives you a sense of
+            what makes me, <em>me</em>.
+          </p>
+
+          <!-- Quick personal facts -->
+          <ul class="quick-facts">
+            <li><span class="qf-icon">📍</span> Based in Ghaziabad, Uttar Pradesh</li>
+            <li><span class="qf-icon">🎓</span> Student at XIM University, Bhubaneswar</li>
+            <li><span class="qf-icon">🌐</span> Languages: English &amp; Hindi</li>
+            <li><span class="qf-icon">💌</span> <a href="mailto:kshitizsharma724@gmail.com">kshitizsharma724@gmail.com</a></li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+
+  <!-- =====================================================================
+       SECTION 2: BACKGROUND — education & journey
+       Rubric: "your education, where you come from, or your journey so far"
+       ===================================================================== -->
+  <section id="background" style="background: var(--surface);">
+    <div class="container">
+      <p class="section-label reveal">Background</p>
+      <h2 class="section-title reveal">My journey so far.</h2>
+
+      <p class="reveal" style="color:var(--muted); max-width:600px; margin-bottom:2.5rem;">
+        I grew up in Ghaziabad, Uttar Pradesh, where my curiosity for creativity
+        and design first took root. My academic journey brought me to Delhi, where
+        I pursued my graduation, and now to Bhubaneswar as I continue to grow and
+        explore new horizons.
+      </p>
+
+      <!-- Timeline of education / key milestones -->
+      <ul class="timeline reveal" aria-label="Education timeline">
+
+        <li class="timeline-item">
+          <div class="timeline-year">2024 – present</div>
+          <div class="timeline-role">Postgraduate Programme</div>
+          <div class="timeline-where">XIM University · Bhubaneswar</div>
+        </li>
+
+        <li class="timeline-item">
+          <div class="timeline-year">2021 – 2024</div>
+          <div class="timeline-role">B.Com (Hons) — Graduation</div>
+          <div class="timeline-where">Shaheed Bhagat Singh College, University of Delhi · Delhi</div>
+        </li>
+
+        <li class="timeline-item">
+          <div class="timeline-year">Earlier</div>
+          <div class="timeline-role">Schooling &amp; Early Years</div>
+          <div class="timeline-where">Ghaziabad, Uttar Pradesh</div>
+        </li>
+
+      </ul>
+
+      <!-- Optional: a favourite quote -->
+      <blockquote class="bg-quote reveal">
+        <!-- ✏️ Replace with a quote that means something to you -->
+        "The more that you read, the more things you will know."
+        <cite>— Dr. Seuss</cite>
+      </blockquote>
+
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+
+  <!-- =====================================================================
+       SECTION 3: HOBBIES & INTERESTS
+       Rubric: "the things you enjoy doing outside academics"
+       ===================================================================== -->
+  <section id="hobbies">
+    <div class="container">
+      <p class="section-label reveal">Hobbies &amp; Interests</p>
+      <h2 class="section-title reveal">What I love outside class.</h2>
+
+      <!-- Hobby cards grid -->
+      <div class="hobby-grid">
+
+        <div class="hobby-card reveal">
+          <div class="hobby-emoji">🎨</div>
+          <h3 class="hobby-name">Social Media Content Design</h3>
+          <p class="hobby-desc">
+            I love creating visually compelling content for social media — from
+            graphics to reels. Design is how I communicate ideas without words.
+          </p>
+        </div>
+
+        <div class="hobby-card reveal">
+          <div class="hobby-emoji">⚽</div>
+          <h3 class="hobby-name">Sports</h3>
+          <p class="hobby-desc">
+            Sports keep me energised and sharp. Whether on the field or watching
+            a match, I love the team spirit and competitive drive that sport brings.
+          </p>
+        </div>
+
+        <div class="hobby-card reveal">
+          <div class="hobby-emoji">🎵</div>
+          <h3 class="hobby-name">Music</h3>
+          <p class="hobby-desc">
+            Music is a constant companion — from discovering new artists across
+            genres to losing myself in a good playlist for hours.
+          </p>
+        </div>
+
+        <div class="hobby-card reveal">
+          <div class="hobby-emoji">🎛️</div>
+          <h3 class="hobby-name">Music Production</h3>
+          <p class="hobby-desc">
+            I produce my own beats and tracks using FL Studio. There's something
+            magical about building a song from scratch, one layer at a time.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+
+  <!-- =====================================================================
+       SECTION 4: SKILLS
+       Rubric: "anything you are good at or learning"
+       ===================================================================== -->
+  <section id="skills" style="background: var(--surface);">
+    <div class="container">
+      <p class="section-label reveal">Skills</p>
+      <h2 class="section-title reveal">What I can do — and what I'm learning.</h2>
+
+      <div class="skills-grid">
+
+        <!-- Design & Creative Tools -->
+        <div class="skill-category reveal">
+          <h3 class="skill-cat-title">🎨 Design &amp; Creative Tools</h3>
+          <ul class="skill-bars">
+            <li>
+              <div class="skill-bar-label"><span>Canva</span><span>90%</span></div>
+              <div class="bar-track"><div class="bar-fill" style="width:90%"></div></div>
+            </li>
+            <li>
+              <div class="skill-bar-label"><span>Adobe Lightroom</span><span>80%</span></div>
+              <div class="bar-track"><div class="bar-fill" style="width:80%"></div></div>
+            </li>
+            <li>
+              <div class="skill-bar-label"><span>Adobe Rush</span><span>75%</span></div>
+              <div class="bar-track"><div class="bar-fill" style="width:75%"></div></div>
+            </li>
+            <li>
+              <div class="skill-bar-label"><span>FL Studio</span><span>70%</span></div>
+              <div class="bar-track"><div class="bar-fill" style="width:70%"></div></div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Languages -->
+        <div class="skill-category reveal">
+          <h3 class="skill-cat-title">🗣️ Languages</h3>
+          <ul class="skill-bars">
+            <li>
+              <div class="skill-bar-label"><span>Hindi</span><span>100%</span></div>
+              <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+            </li>
+            <li>
+              <div class="skill-bar-label"><span>English</span><span>90%</span></div>
+              <div class="bar-track"><div class="bar-fill" style="width:90%"></div></div>
+            </li>
+            <li>
+              <div class="skill-bar-label"><span>Spanish</span><span>45%</span></div>
+              <div class="bar-track"><div class="bar-fill" style="width:45%"></div></div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Currently growing -->
+        <div class="skill-category reveal">
+          <h3 class="skill-cat-title">🌱 Currently Growing</h3>
+          <ul class="learning-list">
+            <li class="learning-item">
+              <span class="learning-dot"></span>
+              Spanish — building conversational fluency
+            </li>
+            <li class="learning-item">
+              <span class="learning-dot"></span>
+              Music production — exploring new genres in FL Studio
+            </li>
+            <li class="learning-item">
+              <span class="learning-dot"></span>
+              Video editing — levelling up in Adobe Rush
+            </li>
+            <li class="learning-item">
+              <span class="learning-dot"></span>
+              Personal branding — growing my content presence
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+
+  <!-- =====================================================================
+       CONTACT — let people reach you
+       ===================================================================== -->
+  <section id="contact">
+    <div class="container">
+      <p class="section-label reveal">Let's work together</p>
+      <h2 class="section-title reveal">Say hello.</h2>
+      <p class="contact-sub reveal">
+        Whether you have a project in mind, a question, or just want to connect —
+        my inbox is always open.
+      </p>
+
+      <!-- Primary email CTA -->
+      <a href="mailto:kshitizsharma724@gmail.com" class="btn btn-primary reveal">
+        Email me
+      </a>
+
+      <!-- Social / profile links — update the href values -->
+      <div class="social-links reveal">
+        <a href="https://github.com/" target="_blank" rel="noopener" class="social-link">GitHub</a>
+        <a href="https://linkedin.com/" target="_blank" rel="noopener" class="social-link">LinkedIn</a>
+        <a href="https://twitter.com/" target="_blank" rel="noopener" class="social-link">Twitter / X</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =====================================================================
+       FOOTER
+       ===================================================================== -->
+  <footer>
+    <div class="container">
+      <!-- Update year and name -->
+      <p>© 2026 Kshitiz Sharma · Built with ❤️ and plain HTML</p>
+    </div>
+  </footer>
+
+
+  <!-- =====================================================================
+       JAVASCRIPT — scroll-reveal animation
+       Watches when elements enter the screen and fades them in.
+       ===================================================================== -->
+  <script>
+    // IntersectionObserver fires a callback when elements enter/leave the viewport.
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // Add .visible class → CSS transition kicks in
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+    // Skill bar animation: when the skills section scrolls into view,
+    // set each bar's width to its target (stored in the inline style).
+    const barObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // Read the target width from the element's data attribute
+            const target = entry.target.dataset.width;
+            entry.target.style.width = target;
+            barObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    // Move inline width to a data attribute so bars start at 0
+    document.querySelectorAll('.bar-fill').forEach((bar) => {
+      bar.dataset.width = bar.style.width;   // save the target
+      bar.style.width = '0';                 // reset to invisible
+      barObserver.observe(bar);
+    });
+  </script>
+
+</body>
+</html>
